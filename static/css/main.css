@@ -119,23 +119,6 @@ a:hover {
     text-decoration: none;
 }
 
-.navbar-brand-icon {
-    width: 28px;
-    height: 28px;
-    background: var(--blue-600);
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.navbar-brand-icon svg {
-    width: 16px;
-    height: 16px;
-    stroke: white;
-}
-
 .navbar-brand-name {
     font-size: 0.95rem;
     font-weight: 700;
@@ -802,18 +785,12 @@ textarea {
 .login-brand-icon {
     width: 32px;
     height: 32px;
-    background: var(--blue-600);
     border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.login-brand-icon svg {
-    width: 18px;
-    height: 18px;
-    stroke: white;
-}
 
 .login-brand-text {
     font-size: 1.1rem;
@@ -909,4 +886,21 @@ textarea {
     .filter-tabs {
         width: 100%;
     }
+}
+
+.navbar-logo-img {
+    width: 100%;
+    height: auto;
+    max-height: 40px; 
+    object-fit: contain;
+    display: block;
+}
+
+.login-logo-img {
+    width: 100%;
+    height: auto;
+    max-height: 64px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto; 
 }

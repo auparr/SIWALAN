@@ -18,7 +18,7 @@ class SesiWaktuBase(models.Model):
     class Meta:
         abstract = True 
 
-    def _hitung_kalkulasi_selesai(self, sks, jam_awal):
+    def _hitung_jam_selesai(self, sks, jam_awal):
 
         durasi_menit = sks * 50
         
@@ -47,7 +47,7 @@ class BaseSchedule(SesiWaktuBase):
 
     def clean(self):
         if self.jam_mulai and self.mata_kuliah_id:
-            self.jam_selesai = self._hitung_kalkulasi_selesai(self.mata_kuliah.sks, self.jam_mulai)
+            self.jam_selesai = self._hitung_jam_selesai(self.mata_kuliah.sks, self.jam_mulai)
 
     def save(self, *args, **kwargs):
         self.clean()
@@ -74,13 +74,13 @@ class ActualSession(SesiWaktuBase):
 
     def clean(self):
         if self.jam_mulai and self.mata_kuliah_id:
-            self.jam_selesai = self._hitung_kalkulasi_selesai(self.mata_kuliah.sks, self.jam_mulai)
+            self.jam_selesai = self._hitung_jam_selesai(self.mata_kuliah.sks, self.jam_mulai)
 
     def get_projected_end_time(self, jam_mulai_baru):
   
         if not self.mata_kuliah_id:
             return None
-        return self._hitung_kalkulasi_selesai(self.mata_kuliah.sks, jam_mulai_baru)
+        return self._hitung_jam_selesai(self.mata_kuliah.sks, jam_mulai_baru)
 
     @property
     def status_label(self):
