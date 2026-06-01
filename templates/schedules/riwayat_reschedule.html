@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Riwayat Reschedule{% endblock title %}
+
+{% block nav_extra %}
+    <a href="{% url 'schedules:dashboard_dosen' %}" class="back-link">← Dashboard</a>
+{% endblock nav_extra %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Riwayat Pengajuan Reschedule</h1>
+    <p class="page-subtitle">Semua pengajuan reschedule yang pernah kamu ajukan.</p>
+</div>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Jadwal Lama</th>
+                <th>Jadwal Baru</th>
+                <th>Metode</th>
+                <th class="center">Status</th>
+                <th>Catatan Admin</th>
+                <th>Diajukan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in riwayat %}
+            <tr>
+                <td>
+                    <div class="td-primary">{{ p.sesi_lama.mata_kuliah.nama }}</div>
+                    <div class="td-secondary">{{ p.sesi_lama.tanggal|date:"d M Y" }} · {{ p.sesi_lama.jam_mulai|time:"H:i" }}</div>
+                </td>
+                <td>
+                    <div class="td-primary">{{ p.tanggal_baru|date:"d M Y" }}</div>
+                    <div class="td-secondary">{{ p.jam_mulai_baru|time:"H:i" }}–{{ p.jam_selesai_baru|time:"H:i" }}</div>
+                </td>
+                <td>{{ p.get_tipe_pengganti_display }}</td>
+                <td class="center">
+                    {% if p.status == 'PENDING' %}
+                        <span class="badge badge-amber">Menunggu</span>
+                    {% elif p.status == 'APPROVED' %}
+                        <span class="badge badge-green">Disetujui</span>
+                    {% elif p.status == 'REJECTED' %}
+                        <span class="badge badge-red">Ditolak</span>
+                    {% endif %}
+                </td>
+                <td style="color: var(--gray-600); max-width: 200px;">
+                    {% if p.catatan_admin %}{{ p.catatan_admin }}
+                    {% else %}<em style="color:var(--gray-400)">—</em>{% endif %}
+                </td>
+                <td class="td-mono" style="color:var(--gray-500); white-space:nowrap;">
+                    {{ p.dibuat_pada|date:"d M Y" }}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="td-empty">Belum ada pengajuan reschedule.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

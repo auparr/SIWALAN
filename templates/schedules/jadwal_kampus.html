@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Jadwal Kampus{% endblock title %}
+
+{% block nav_extra %}
+    <a href="{% url 'schedules:dashboard_dosen' %}" class="back-link">← Dashboard</a>
+{% endblock nav_extra %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Jadwal Seluruh Kampus</h1>
+    <p class="page-subtitle">Seluruh aktivitas perkuliahan dari hari ini ke depan.</p>
+</div>
+
+<div class="action-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+    
+    <div class="filter-tabs" style="margin-bottom: 0;">
+        <a href="?filter=hari_ini&q={{ search_query }}" class="filter-tab {% if filter_aktif == 'hari_ini' %}active{% endif %}">Hari Ini</a>
+        <a href="?filter=besok&q={{ search_query }}" class="filter-tab {% if filter_aktif == 'besok' %}active{% endif %}">Besok</a>
+        <a href="?filter=minggu_ini&q={{ search_query }}" class="filter-tab {% if filter_aktif == 'minggu_ini' %}active{% endif %}">7 Hari</a>
+        <a href="?filter=semua&q={{ search_query }}" class="filter-tab {% if filter_aktif == 'semua' %}active{% endif %}">Semua</a>
+    </div>
+
+    <form method="GET" class="search-form" style="display: flex; gap: 0.5rem;">
+        <input type="hidden" name="filter" value="{{ filter_aktif }}">
+        <input type="text" name="q" value="{{ search_query }}" placeholder="Cari matkul, dosen, ruang..." class="form-control" style="padding: 0.5rem; border-radius: 4px; border: 1px; width:600px; solid #ccc;">
+        <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem;">Cari</button>
+    </form>
+</div>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Waktu</th>
+                <th>Mata Kuliah & Dosen</th>
+                <th>Ruangan</th>
+                <th class="center">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sesi in semua_jadwal %}
+            <tr>
+                <td class="td-mono">{{ sesi.tanggal|date:"d M Y" }}</td>
+                <td class="td-mono">{{ sesi.jam_mulai|time:"H:i" }}–{{ sesi.jam_selesai|time:"H:i" }}</td>
+                <td>
+                    <div class="td-primary">{{ sesi.mata_kuliah.nama }}</div>
+                    <div class="td-secondary">{{ sesi.dosen_pengampu }}</div>
+                </td>
+                <td>{{ sesi.ruangan.nama|default:"Online" }}</td>
+                <td class="center">
+                    {% if sesi.status == 'SCHEDULED' %}
+                        <span class="badge badge-green">Terjadwal</span>
+                    {% elif sesi.status == 'RESCHEDULED' %}
+                        <span class="badge badge-amber">Diubah</span>
+                    {% elif sesi.status == 'CANCELED' %}
+                        <span class="badge badge-red">Batal</span>
+                    {% else %}
+                        <span class="badge badge-gray">{{ sesi.status }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="td-empty">Belum ada jadwal yang tersedia.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block content %}
+
+{% if not dosen %}
+<div class="admin-warning">⚠ Mode Admin — Menampilkan seluruh jadwal kampus.</div>
+{% endif %}
+
+<!-- Next Class Banner -->
+{% if jadwal_terdekat %}
+<div class="next-class-banner">
+    <div>
+        <div class="next-class-label">Jadwal Berikutnya</div>
+        <div class="next-class-name">{{ jadwal_terdekat.mata_kuliah.nama }}</div>
+        <div class="next-class-time">
+            {{ jadwal_terdekat.tanggal|date:"l, d F Y" }} &nbsp;·&nbsp;
+            {{ jadwal_terdekat.jam_mulai|time:"H:i" }}–{{ jadwal_terdekat.jam_selesai|time:"H:i" }} WIB
+        </div>
+    </div>
+    <div class="next-class-room">
+        <div class="next-class-room-label">Ruangan</div>
+        <div class="next-class-room-name">{{ jadwal_terdekat.ruangan.nama|default:"Online" }}</div>
+    </div>
+</div>
+{% else %}
+<div class="next-class-empty">Tidak ada jadwal mengajar dalam waktu dekat.</div>
+{% endif %}
+
+<!-- Action Bar -->
+<div class="action-bar">
+    <div class="action-bar-left">
+        <button id="btnOpenModal" class="btn btn-primary">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Ajukan Reschedule
+        </button>
+        <a href="{% url 'schedules:jadwal_kampus' %}" class="btn btn-secondary">Jadwal Kampus</a>
+        <a href="{% url 'schedules:riwayat_reschedule' %}" class="btn btn-secondary">Riwayat Pengajuan</a>
+    </div>
+    <div class="pending-badge">
+        {{ jumlah_pending }} menunggu persetujuan
+    </div>
+</div>
+
+<!-- Filter Tabs -->
+<div class="filter-tabs">
+    <a href="?filter=minggu_ini" class="filter-tab {% if filter_aktif == 'minggu_ini' %}active{% endif %}">7 Hari</a>
+    <a href="?filter=bulan_ini"  class="filter-tab {% if filter_aktif == 'bulan_ini'  %}active{% endif %}">30 Hari</a>
+    <a href="?filter=semua"      class="filter-tab {% if filter_aktif == 'semua'      %}active{% endif %}">Semua</a>
+</div>
+
+<!-- Schedule Table -->
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Waktu</th>
+                <th>Mata Kuliah</th>
+                <th>Ruangan</th>
+                <th class="center">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sesi in jadwal_saya %}
+            <tr>
+                <td class="td-mono">{{ sesi.tanggal|date:"d M Y" }}</td>
+                <td class="td-mono">{{ sesi.jam_mulai|time:"H:i" }}–{{ sesi.jam_selesai|time:"H:i" }}</td>
+                <td>
+                    <div class="td-primary">{{ sesi.mata_kuliah.nama }}</div>
+                    {% if not dosen %}
+                    <div class="td-secondary">{{ sesi.dosen_pengampu }}</div>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if sesi.ruangan %}{{ sesi.ruangan.nama }}
+                    {% else %}<em style="color:var(--gray-400)">Online</em>{% endif %}
+                </td>
+                <td class="center">
+                    {% if sesi.status == 'SCHEDULED' %}
+                        <span class="badge badge-green">Terjadwal</span>
+                    {% elif sesi.status == 'RESCHEDULED' %}
+                        <span class="badge badge-amber">Diubah</span>
+                    {% elif sesi.status == 'CANCELED' %}
+                        <span class="badge badge-red">Batal</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="td-empty">Belum ada jadwal yang tersedia.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Reschedule -->
+<div id="rescheduleModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="modal-title">Ajukan Reschedule</span>
+            <button id="btnCloseModal" class="modal-close">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <form action="{% url 'schedules:ajukan_reschedule' %}" method="post">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Jadwal yang Diubah</label>
+                    <select name="sesi_lama" required>
+                        <option value="">— Pilih Jadwal —</option>
+                        {% for sesi in jadwal_akan_datang %}
+                        <option value="{{ sesi.id }}">
+                            {% if sesi.status == 'CANCELED' %}[LIBUR] {% endif %}{{ sesi.tanggal|date:"d M" }} | {{ sesi.mata_kuliah.nama }} ({{ sesi.jam_mulai|time:"H:i" }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Tanggal Pengganti</label>
+                        <input type="date" name="tanggal_baru" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Jam Mulai</label>
+                        <input type="time" name="jam_mulai_baru" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Metode</label>
+                    <select name="tipe_pengganti">
+                        <option value="OFFLINE">Tatap Muka / Offline</option>
+                        <option value="ONLINE">Daring / Online</option>
+                    </select>
+                </div>
+                <div id="containerRuangan" class="form-group">
+                    <label>Ruangan Tersedia</label>
+                    <select name="ruangan_baru" id="selectRuangan" disabled>
+                        <option value="">— Isi tanggal & jam dulu —</option>
+                    </select>
+                    <span id="teksInfoRuang" class="form-hint warning">Isi tanggal & jam untuk melihat ruangan kosong.</span>
+                </div>
+                <div class="form-group">
+                    <label>Alasan</label>
+                    <textarea name="alasan" placeholder="Misal: Ada rapat dekanat dadakan..." required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCancelModal" class="btn btn-secondary">Batal</button>
+                <button type="submit" class="btn btn-primary">Kirim Pengajuan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/reschedule.js' %}"></script>
+{% endblock extra_js %}

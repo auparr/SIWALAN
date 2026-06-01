@@ -1,0 +1,45 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+
+<h2>Generate Jadwal Semester</h2>
+<p>
+    Sistem akan membaca semua <strong>BaseSchedule</strong> yang ada, lalu mencetak
+    <strong>ActualSession</strong> untuk setiap minggu secara otomatis.
+    Sesi yang jatuh pada hari libur akan otomatis diberi status <em>Dibatalkan</em>.
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    <fieldset class="module aligned">
+        <div class="form-row">
+            <label for="tanggal_mulai">Tanggal Mulai Semester:</label>
+            <input type="date" name="tanggal_mulai" id="tanggal_mulai" required>
+        </div>
+        <div class="form-row">
+            <label for="jumlah_minggu">Jumlah Minggu:</label>
+            <input type="number" name="jumlah_minggu" id="jumlah_minggu" value="16" min="1" max="52">
+        </div>
+    </fieldset>
+    <div class="submit-row">
+        <input type="submit" value="🚀 Generate Sekarang" class="default">
+    </div>
+</form>
+
+{% if hasil is not None %}
+<hr>
+<h3>Hasil Generate</h3>
+<p><strong>{{ hasil }}</strong> sesi berhasil dibuat.</p>
+
+{% if error_logs %}
+<h4>Sesi yang Dilewati ({{ error_logs|length }} konflik):</h4>
+<ul>
+    {% for log in error_logs %}
+    <li style="color: #c0392b;">{{ log }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p style="color: green;">Tidak ada konflik. Semua sesi berhasil digenerate.</p>
+{% endif %}
+{% endif %}
+
+{% endblock %}
