@@ -104,7 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = [
     'accounts.backends.NIPBackend',
-    'django.contrib.auth.backends.ModelBackend',  # fallback untuk admin
+    'django.contrib.auth.backends.ModelBackend', 
 ]
 
 # Internationalization

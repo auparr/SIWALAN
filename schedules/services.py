@@ -9,10 +9,6 @@ def _hitung_jam_selesai(jam_mulai, sks):
     return (dummy + timedelta(minutes=durasi_menit)).time()
 
 def validate_full_session(tanggal, jam_mulai, jam_selesai, dosen_pengampu, ruangan=None, kelas_offline_list=None, kelas_online_list=None, exclude_session_id=None):
-    """
-    Mesin Validasi Utama Skala Enterprise.
-    Menyapu bersih semua kemungkinan bentrok (Holiday, Capacity, Collision).
-    """
     kelas_offline_list = kelas_offline_list or []
     kelas_online_list = kelas_online_list or []
     semua_kelas = kelas_offline_list + kelas_online_list
@@ -25,8 +21,7 @@ def validate_full_session(tanggal, jam_mulai, jam_selesai, dosen_pengampu, ruang
         total_peserta_offline = sum(kelas.jumlah_mahasiswa for kelas in kelas_offline_list)
         if total_peserta_offline > ruangan.kapasitas:
             raise ValidationError(
-                f"Kapasitas ruangan {ruangan.nama} tidak mencukupi! "
-                f"Kapasitas Maksimal: {ruangan.kapasitas}, Total Hadir Fisik: {total_peserta_offline}."
+                f"Kapasitas ruangan {ruangan.nama} tidak mencukupi! \nKapasitas Maksimal: {ruangan.kapasitas}, Total Hadir Fisik: {total_peserta_offline}."
             )
 
     overlap_sessions = ActualSession.objects.filter(
@@ -63,10 +58,7 @@ def validate_full_session(tanggal, jam_mulai, jam_selesai, dosen_pengampu, ruang
 
 @transaction.atomic
 def generate_semester_schedule(tanggal_mulai_semester, jumlah_minggu=16):
-    """
-    Mesin Pencetak Jadwal 1 Semester.
-    Membaca BaseSchedule dan mencetak ActualSession untuk 16 minggu.
-    """
+
     base_schedules = BaseSchedule.objects.all()
     tanggal_akhir_semester = tanggal_mulai_semester + timedelta(weeks=jumlah_minggu)
     

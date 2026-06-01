@@ -8,7 +8,6 @@ from .models import BaseSchedule, ActualSession, SessionKelas, PengajuanReschedu
 from .services import approve_reschedule as service_approve, generate_semester_schedule
 
 
-
 @admin.action(description='Approve & Pindahkan Jadwal')
 def approve_reschedule_action(modeladmin, request, queryset):
 

@@ -8,7 +8,7 @@ from master_data.models import Ruangan
 from django.contrib import messages
 from django.http import JsonResponse
 
-@login_required
+@login_required(login_url='login')
 def dashboard_dosen(request):
     hari_ini = date.today()
     
@@ -18,7 +18,7 @@ def dashboard_dosen(request):
         batas_akhir = hari_ini + timedelta(days=7)
     elif filter_waktu == 'bulan_ini':
         batas_akhir = hari_ini + timedelta(days=30)
-    else: # Jika 'semua'
+    else: 
         batas_akhir = None
 
     try:
@@ -154,17 +154,14 @@ def cek_ruang_kosong(request):
 
         ruang_terpakai_ids = jadwal_bentrok.values_list('ruangan_id', flat=True)
 
-        # Hitung total mahasiswa di sesi ini
         total_mahasiswa = sum(
             sk.kelas.jumlah_mahasiswa 
             for sk in sesi.peserta_kelas.select_related('kelas')
         )
 
-        # Filter ruangan yang kosong DAN kapasitasnya cukup
         ruang_bebas = Ruangan.objects.exclude(id__in=ruang_terpakai_ids).filter(
             kapasitas__gte=total_mahasiswa
         )
-
 
         data = [{'id': r.id, 'nama': r.nama, 'kapasitas': r.kapasitas} for r in ruang_bebas]
         return JsonResponse({'ruangan': data})

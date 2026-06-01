@@ -8,9 +8,7 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = UserAdmin.fieldsets + (('Informasi Tambahan', {'fields': ('role',)}),)
 
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        ('Informasi Tambahan', {'fields': ('role',)}),
-    )
+    add_fieldsets = UserAdmin.add_fieldsets + (('Informasi Tambahan', {'fields': ('role',)}),)
 
 @admin.register(ProfilDosen)
 class ProfilDosenAdmin(admin.ModelAdmin):

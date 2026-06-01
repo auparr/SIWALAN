@@ -1,13 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // --- GEMBOK MASA LALU ---
     const inputTanggalBaru = document.querySelector('input[name="tanggal_baru"]');
     if (inputTanggalBaru) {
         const hariIni = new Date().toISOString().split('T')[0];
         inputTanggalBaru.setAttribute('min', hariIni);
     }
 
-    // --- MODAL ---
     const modal = document.getElementById('rescheduleModal');
     const btnOpen = document.getElementById('btnOpenModal');
     const btnClose = document.getElementById('btnCloseModal');
@@ -20,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
     btnCancel.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-    // --- RADAR RUANGAN KOSONG ---
     const inputSesi = document.querySelector('select[name="sesi_lama"]');
     const inputTanggal = document.querySelector('input[name="tanggal_baru"]');
     const inputJam = document.querySelector('input[name="jam_mulai_baru"]');
