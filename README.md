@@ -1,6 +1,6 @@
 # SIWALAN (Sistem Informasi Penjadwalan)
 
-## 📌 Deskripsi Project
+## Deskripsi Project
 
 Proyek ini adalah sebuah Sistem Informasi berbasis web yang dikembangkan menggunakan framework **Django (Python)**. Sistem ini dirancang untuk menyelesaikan permasalahan penjadwalan kelas manual (_Constraint Satisfaction Problem_) dengan menyediakan fitur pembuatan jadwal otomatis dan mesin validasi anti-bentrok.
 
@@ -8,7 +8,7 @@ Aplikasi ini mempermudah admin dalam mengelola jadwal satu semester dan memungki
 
 ---
 
-## 👥 Anggota Kelompok 9
+## Anggota Kelompok 9
 
 | Nama                       | NIM         |
 | -------------------------- | ----------- |
@@ -16,13 +16,13 @@ Aplikasi ini mempermudah admin dalam mengelola jadwal satu semester dan memungki
 
 ---
 
-## ✨ Fitur Utama
+## Fitur Utama
 
-### 📅 Generator Jadwal Semester Otomatis
+### Generator Jadwal Semester Otomatis
 
 Mencetak jadwal perkuliahan selama 16 minggu dari satu jadwal dasar dan secara otomatis membatalkan kelas yang jatuh pada hari libur nasional.
 
-### 🚫 Mesin Validasi Anti-Bentrok
+### Mesin Validasi Anti-Bentrok
 
 Melakukan validasi multi-layer untuk mencegah:
 
@@ -31,14 +31,14 @@ Melakukan validasi multi-layer untuk mencegah:
 - Bentrok jadwal mahasiswa
 - Jadwal pada hari libur nasional
 
-### 🏫 Pencari Ruang Kosong Cerdas
+### Pencari Ruang Kosong Cerdas
 
 Menampilkan daftar ruangan yang:
 
 - Tidak sedang digunakan
 - Memiliki kapasitas yang cukup untuk jumlah mahasiswa
 
-### 👨‍🏫 Dashboard & Filter Dosen
+### Dashboard & Filter Dosen
 
 Menyediakan antarmuka khusus dosen untuk melihat jadwal:
 
@@ -46,13 +46,13 @@ Menyediakan antarmuka khusus dosen untuk melihat jadwal:
 - Mingguan
 - Bulanan
 
-### 🔐 Autentikasi Custom
+### Autentikasi Custom
 
 Sistem login menggunakan **Nomor Induk Pegawai (NIP)** sebagai identitas pengguna.
 
 ---
 
-## 🚀 Cara Menjalankan Project
+## Cara Menjalankan Project
 
 ### 1. Persiapan
 
@@ -131,7 +131,7 @@ http://127.0.0.1:8000/
 
 ---
 
-## 🧬 Implementasi Object-Oriented Programming (OOP)
+## Implementasi Object-Oriented Programming (OOP)
 
 Proyek ini menerapkan empat pilar utama OOP melalui pemodelan database menggunakan Django ORM.
 
@@ -194,7 +194,7 @@ Kelas lain cukup memanggil fungsi tersebut tanpa perlu mengetahui detail proses 
 
 ---
 
-## 📸 Screenshot Tampilan Program
+## Screenshot Tampilan Program
 
 ### 1. Halaman Login
 
@@ -226,7 +226,7 @@ Kelas lain cukup memanggil fungsi tersebut tanpa perlu mengetahui detail proses 
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## Teknologi yang Digunakan
 
 - Python
 - Django
@@ -236,7 +236,3 @@ Kelas lain cukup memanggil fungsi tersebut tanpa perlu mengetahui detail proses 
 - JavaScript
 
 ---
-
-## 📄 Lisensi
-
-Proyek ini dibuat untuk memenuhi tugas mata kuliah dan tujuan pembelajaran akademik.
